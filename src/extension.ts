@@ -13,10 +13,32 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('autocomment.helloWorld', () => {
+	let disposable = vscode.commands.registerCommand('autocomment.shortcut', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Autocomment!');
+		const editor = vscode.window.activeTextEditor;
+
+		if (editor) {
+			const entireFile = editor.document;
+			const entireCode = entireFile.getText();
+
+			const selection = editor.selection;
+			const cursorPos = selection.start;
+			const selectedText = editor.document.getText(selection);
+
+
+			//const textToInsert = GPToutput(entireCode, selectedText);
+			const textToInsert = '// Inserted text\n';
+
+
+			const insertPos = new vscode.Position(cursorPos.line, 0);
+			editor.edit(editBuilder => {
+                editBuilder.insert(insertPos, textToInsert);
+            }).then(() => {
+
+            });
+
+		}
 	});
 
 	context.subscriptions.push(disposable);
